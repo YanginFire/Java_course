@@ -39,7 +39,7 @@ public class AdminMenu implements ActionListener {
         JFrame frame = new JFrame();
         /* Для форм заполнения логина и пароля */
 
-        frame.setSize(400,200);
+        frame.setSize(500,200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.add(panel);
@@ -167,126 +167,148 @@ public class AdminMenu implements ActionListener {
     }
 
     /**
-     * НЕ РАБОТАЕТ ОШИБКА В SQL????
+     * Сделано
      */
     public static void updateEmployee(){
-        JPanel addpanel = new JPanel();
+        JPanel updatepanel = new JPanel();
 
-        JFrame addframe = new JFrame();
-        addframe.setLayout(new BorderLayout());
-        JButton addButUpdate = new JButton("Обновить");
-        JLabel Idlabel = new JLabel("Введите id сотрудника которого хотите поменять:");
-        JLabel namelabel = new JLabel("Введите имя сотрудника:");
-        JLabel surnamelabel = new JLabel("Введите фамилию");
-        JLabel birthdatelabel = new JLabel("Дата рождения сотрудника (формат DD.MM.YY):");
-        JLabel birthplacelabel = new JLabel("Введите место рождения сотрудника:");
-        JLabel salarylabel = new JLabel("Введите зарплату сотрудника:");
-        JLabel statuslabel = new JLabel("Введите семейное положение сотрудника:");
+        JFrame updateframe = new JFrame();
+        updateframe.setLayout(new BorderLayout());
+        JButton updateBut = new JButton("Изменить данные");
+        JLabel question = new JLabel("Введите id сотрудника для изменения:");
 
         JLabel nothing = new JLabel(" ");
-        JTextField Id = new JTextField(20);
-        JTextField firstname = new JTextField(20);
-        JTextField surname = new JTextField(20);
-        JTextField birthdate = new JTextField(20);
-        JTextField birthplace = new JTextField(20);
-        JTextField salary = new JTextField(20);
-        JTextField status = new JTextField(20);
+        JTextField id_question = new JTextField(20);
+
+        updateframe.setSize(280,150);
+
+        updateframe.add(updatepanel, BorderLayout.CENTER);
+
+        question.setBounds(300,600,80,25);
+        updatepanel.add(question, BorderLayout.CENTER);
+
+        updatepanel.add(nothing, BorderLayout.CENTER);
+
+        id_question.setBounds(300,540,400,450);
+        updatepanel.add(id_question, BorderLayout.CENTER);
 
 
-        addframe.setSize(280,350);
-        addframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addframe.add(addpanel, BorderLayout.CENTER);
+        updateBut.setBounds(300,0,350,300);
+        updatepanel.add(updateBut, BorderLayout.CENTER);
 
-        Idlabel.setBounds(300,600,80,25);
-        addpanel.add(Idlabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        Id.setBounds(300,540,400,450);
-        addpanel.add(Id, BorderLayout.CENTER);
-
-        namelabel.setBounds(300,600,80,25);
-        addpanel.add(namelabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        firstname.setBounds(300,540,400,450);
-        addpanel.add(firstname, BorderLayout.CENTER);
-
-        surnamelabel.setBounds(300,500,80,25);
-        addpanel.add(surnamelabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        surname.setBounds(300,420,165,25);
-        addpanel.add(surname, BorderLayout.CENTER);
-
-
-        birthdatelabel.setBounds(300,360,80,25);
-        addpanel.add(birthdatelabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        birthdate.setBounds(300,300,165,25);
-        addpanel.add(birthdate, BorderLayout.CENTER);
-
-        birthplacelabel.setBounds(300,240,80,25);
-        addpanel.add(birthplacelabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        birthplace.setBounds(300,180,165,25);
-        addpanel.add(birthplace, BorderLayout.CENTER);
-
-        salarylabel.setBounds(300,120,80,25);
-        addpanel.add(salarylabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        salary.setBounds(300,60,165,25);
-        addpanel.add(salary, BorderLayout.CENTER);
-
-        statuslabel.setBounds(300,120,80,25);
-        addpanel.add(statuslabel, BorderLayout.CENTER);
-        addpanel.add(nothing, BorderLayout.CENTER);
-        status.setBounds(300,60,165,25);
-        addpanel.add(status, BorderLayout.CENTER);
-
-        addButUpdate.setBounds(300,0,350,300);
-        addpanel.add(addButUpdate, BorderLayout.CENTER);
-
-
-
-        addframe.setVisible(true);
-
-        addButUpdate.addActionListener(new ActionListener() {
+        updateBut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
-                final String USERNAME = "root";
-                final String PASSWORD = "root";
+                JPanel addpanel = new JPanel();
 
-                int id = Integer.parseInt(Id.getText());
-                String firstName = firstname.getText();
-                String surName = surname.getText();
-                String birthDate = birthdate.getText();
-                String birthPlace = birthplace.getText();
-                Double salarys = Double.valueOf(salary.getText());
-                String statuss = status.getText();
+                JFrame addframe = new JFrame();
+                addframe.setLayout(new BorderLayout());
+                JButton addBut = new JButton("Изменить");
+                JLabel namelabel = new JLabel("Введите имя сотрудника:");
+                JLabel surnamelabel = new JLabel("Введите фамилию");
+                JLabel birthdatelabel = new JLabel("Дата рождения сотрудника (формат DD.MM.YY):");
+                JLabel birthplacelabel = new JLabel("Введите место рождения сотрудника:");
+                JLabel salarylabel = new JLabel("Введите зарплату сотрудника:");
+                JLabel statuslabel = new JLabel("Введите семейное положение сотрудника:");
+
+                JLabel nothing = new JLabel(" ");
+                JTextField firstname = new JTextField(20);
+                JTextField surname = new JTextField(20);
+                JTextField birthdate = new JTextField(20);
+                JTextField birthplace = new JTextField(20);
+                JTextField salary = new JTextField(20);
+                JTextField status = new JTextField(20);
 
 
-                String QUERY = "UPDATE people SET ";
+                addframe.setSize(280,350);
+                addframe.add(addpanel, BorderLayout.CENTER);
 
-                QUERY += "('" +
-                        id + "','" +
-                        firstName + "','" +
-                        surName + "','" +
-                        birthDate + "','" +
-                        birthPlace + "'," +
-                        salarys + ",'" +
-                        statuss
-                        + "')";
+                namelabel.setBounds(300,600,80,25);
+                addpanel.add(namelabel, BorderLayout.CENTER);
+                addpanel.add(nothing, BorderLayout.CENTER);
+                firstname.setBounds(300,540,400,450);
+                addpanel.add(firstname, BorderLayout.CENTER);
 
-                Connection conn = null;
-                try {
-                    conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
-                    Statement stmt = conn.createStatement();
-                    stmt.executeUpdate(QUERY);
-                    System.out.println("Сотрудник успешно добавлен.");
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                surnamelabel.setBounds(300,500,80,25);
+                addpanel.add(surnamelabel, BorderLayout.CENTER);
+                addpanel.add(nothing, BorderLayout.CENTER);
+                surname.setBounds(300,420,165,25);
+                addpanel.add(surname, BorderLayout.CENTER);
 
+
+                birthdatelabel.setBounds(300,360,80,25);
+                addpanel.add(birthdatelabel, BorderLayout.CENTER);
+                addpanel.add(nothing, BorderLayout.CENTER);
+                birthdate.setBounds(300,300,165,25);
+                addpanel.add(birthdate, BorderLayout.CENTER);
+
+                birthplacelabel.setBounds(300,240,80,25);
+                addpanel.add(birthplacelabel, BorderLayout.CENTER);
+                addpanel.add(nothing, BorderLayout.CENTER);
+                birthplace.setBounds(300,180,165,25);
+                addpanel.add(birthplace, BorderLayout.CENTER);
+
+                salarylabel.setBounds(300,120,80,25);
+                addpanel.add(salarylabel, BorderLayout.CENTER);
+                addpanel.add(nothing, BorderLayout.CENTER);
+                salary.setBounds(300,60,165,25);
+                addpanel.add(salary, BorderLayout.CENTER);
+
+                statuslabel.setBounds(300,120,80,25);
+                addpanel.add(statuslabel, BorderLayout.CENTER);
+                addpanel.add(nothing, BorderLayout.CENTER);
+                status.setBounds(300,60,165,25);
+                addpanel.add(status, BorderLayout.CENTER);
+
+                addBut.setBounds(300,0,350,300);
+                addpanel.add(addBut, BorderLayout.CENTER);
+
+                addframe.setVisible(true);
+                // Функция для кнопки добавления сотрудника в БД
+                addBut.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
+                        final String USERNAME = "root";
+                        final String PASSWORD = "root";
+
+                        String id_que = id_question.getText();
+                        String firstName = firstname.getText();
+                        String surName = surname.getText();
+                        String birthDate = birthdate.getText();
+                        String birthPlace = birthplace.getText();
+                        Double salarys = Double.valueOf(salary.getText());
+                        String statuss = status.getText();
+
+
+                        String QUERY = "UPDATE people SET ";
+
+                        QUERY += "firstname='" + firstName + "'," +
+                                "surname='" + surName + "'," +
+                                "birthdate='" + birthDate + "'," +
+                                "birthplace='" + birthPlace + "'," +
+                                "salary=" + salarys + "," +
+                                "status='" + statuss + "'" +
+                                " WHERE id=" + id_que;
+
+                        Connection conn = null;
+                        try {
+                            conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                            Statement stmt = conn.createStatement();
+                            stmt.executeUpdate(QUERY);
+                            System.out.println("Сотрудник успешно добавлен.");
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+                });
             }
         });
+
+        updateframe.setVisible(true);
+
     }
     /**
      * Сделано
@@ -314,7 +336,6 @@ public class AdminMenu implements ActionListener {
 
 
         addframe.setSize(280,350);
-        addframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addframe.add(addpanel, BorderLayout.CENTER);
 
         namelabel.setBounds(300,600,80,25);
