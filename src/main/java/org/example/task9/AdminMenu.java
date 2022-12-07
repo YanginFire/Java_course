@@ -88,10 +88,18 @@ public class AdminMenu implements ActionListener {
         else if (user.equals("root1") && password.equals("root1")){
             System.out.println("Log In  Redactor");
 
+            connectToDatabase();
+
+            frame_for_editor();
+
         }
 
         else if (user.equals("root2") && password.equals("root2")) {
             System.out.println("Log In  Viewer");
+
+            connectToDatabase();
+
+            frame_for_viewer();
 
         }
 
@@ -100,28 +108,80 @@ public class AdminMenu implements ActionListener {
         }
     }
 
+    private static Component frame_for_editor() {
+        JPanel editorpanel = new JPanel();
+        JFrame editorframe = new JFrame();
+        JButton updateButton = new JButton();
+        JButton delButton = new JButton();
+
+        editorframe.setSize(600,600);
+        editorframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        editorframe.setVisible(true);
+        editorframe.add(editorpanel);
+
+
+        updateButton = new JButton("Update something");
+        updateButton.setBounds(10,300,350,300);
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Info updated");
+                updateEmployee();
+
+            }
+        });
+        editorpanel.add(updateButton);
+
+        delButton = new JButton("Удалить");
+        delButton.setBounds(10,300,350,300);
+        delButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("The employee has been deleted");
+                deleteEmployee();
+            }
+        });
+
+        editorpanel.add(delButton);
+        return null;
+    }
+
     /**
      * Функция для отрисовки интерфейса администратора
      * <p>
-     * ADD - done
-     * Update function not done yet!!!
+     * ADD and Update func - DONE
+     *
+     * delete - NOT DONE
      *
      * @return
      */
     public static Component frame_for_admin() {
-
 
         JPanel adminpanel = new JPanel();
         JFrame adminframe = new JFrame();
         JButton addButton = new JButton();
         JButton updateButton = new JButton();
 
+        JButton delete_Button = new JButton();
+
         adminframe.setSize(600,600);
         adminframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         adminframe.setVisible(true);
         adminframe.add(adminpanel);
 
-        addButton = new JButton("Add something");
+        delete_Button = new JButton("Удалить");
+        delete_Button.setBounds(10,320,350,300);
+
+        delete_Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Delete data");
+                deleteEmployee();
+            }
+        });
+        adminpanel.add(delete_Button);
+
+        addButton = new JButton("Добавить");
         addButton.setBounds(10,320,350,300);
 
 
@@ -129,17 +189,17 @@ public class AdminMenu implements ActionListener {
          * Функция которая спрашивает пользователя здесь ли он?
          */
 
-        JOptionPane optionPane = new JOptionPane();
-
-        Timer timer = new Timer(15000, e -> {
-            optionPane.setVisible(false);
-            optionPane.getRootFrame().dispose();
-        });
-        timer.setRepeats(false);
-        timer.start();
-
-
-        int n = optionPane.showConfirmDialog(null, "Are you here?", null, JOptionPane.YES_NO_OPTION);
+//        JOptionPane optionPane = new JOptionPane();
+//
+//        Timer timer = new Timer(15000, e -> {
+//            optionPane.setVisible(false);
+//            optionPane.getRootFrame().dispose();
+//        });
+//        timer.setRepeats(false);
+//        timer.start();
+//
+//
+//        int n = optionPane.showConfirmDialog(null, "Are you here?", null, JOptionPane.YES_NO_OPTION);
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -164,6 +224,110 @@ public class AdminMenu implements ActionListener {
         });
         adminpanel.add(updateButton);
         return null;
+    }
+
+    public static Component frame_for_viewer(){
+        JPanel viewerpanel = new JPanel();
+        JFrame viewerframe = new JFrame();
+        JButton addButton = new JButton();
+        JButton updateButton = new JButton();
+
+        JButton find_id_Button = new JButton();
+
+        viewerframe.setSize(600,600);
+        viewerframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        viewerframe.setVisible(true);
+        viewerframe.add(viewerpanel);
+
+        find_id_Button = new JButton("Найти сотрудника по ID");
+        find_id_Button.setBounds(10,320,350,300);
+
+        find_id_Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("find by id");
+                find_by_id();
+            }
+        });
+        viewerpanel.add(find_id_Button);
+
+        return null;
+    }
+
+    /**
+     * Сделан функционал
+     * Вывод в отдельное окно или таблицу (????)
+     */
+    public static void find_by_id() {
+        JPanel find_by_idpanel = new JPanel();
+
+        JFrame find_by_idframe = new JFrame();
+        find_by_idframe.setLayout(new BorderLayout());
+        JButton find_by_idBut = new JButton("Найти");
+        JLabel quest = new JLabel("Введите id сотрудника:");
+
+        JLabel nothing = new JLabel(" ");
+        JTextField id_quest = new JTextField(20);
+
+        find_by_idframe.setSize(280,150);
+
+        find_by_idframe.add(find_by_idpanel, BorderLayout.CENTER);
+
+        quest.setBounds(300,600,80,25);
+        find_by_idpanel.add(quest, BorderLayout.CENTER);
+
+        find_by_idpanel.add(nothing, BorderLayout.CENTER);
+
+        id_quest.setBounds(300,540,400,450);
+        find_by_idpanel.add(id_quest, BorderLayout.CENTER);
+
+
+        find_by_idBut.setBounds(300,0,350,300);
+        find_by_idpanel.add(find_by_idBut, BorderLayout.CENTER);
+
+        find_by_idBut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
+                final String USERNAME = "root";
+                final String PASSWORD = "root";
+
+                int id_que = Integer.parseInt(id_quest.getText());
+
+                String QUERY = "SELECT * FROM people WHERE id=";
+
+                QUERY += id_que;
+
+                Connection conn = null;
+                try {
+                    conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                    Statement stmt = conn.createStatement();
+//                    stmt.executeQuery(QUERY);
+                    ResultSet rs = stmt.executeQuery(QUERY); {
+                        System.out.println("Сотрудник найден!");
+                        while (rs.next()) {
+                            System.out.println("=========================== ID: " + rs.getInt("id") + " ==========================");
+                            System.out.println("Имя: " + rs.getString("firstname"));
+                            System.out.println("Фамилия: " + rs.getString("surname"));
+                            System.out.println("Дата Рождения: " + rs.getString("birthdate"));
+                            System.out.println("Место Рождения: " + rs.getString("birthplace"));
+                            System.out.println("Зарплата: " + rs.getString("salary"));
+                            System.out.println("Статус: " + rs.getString("status"));
+                            System.out.println("************************************************************");
+                        }
+
+                    }
+                    System.out.println("Сотрудник найден");
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
+
+        find_by_idframe.setVisible(true);
+
     }
 
     /**
@@ -308,6 +472,90 @@ public class AdminMenu implements ActionListener {
         });
 
         updateframe.setVisible(true);
+
+    }
+    /**
+     * Сделано
+     */
+    public static void deleteEmployee(){
+        JPanel deletepanel = new JPanel();
+
+        JFrame deleteframe = new JFrame();
+        deleteframe.setLayout(new BorderLayout());
+        JButton deleteBut = new JButton("Удалить");
+        JLabel question = new JLabel("Введите id сотрудника для удаления из БД:");
+
+        JLabel nothing = new JLabel(" ");
+        JTextField id_question = new JTextField(20);
+
+        deleteframe.setSize(280,150);
+
+        deleteframe.add(deletepanel, BorderLayout.CENTER);
+
+        question.setBounds(300,600,80,25);
+        deletepanel.add(question, BorderLayout.CENTER);
+
+        deletepanel.add(nothing, BorderLayout.CENTER);
+
+        id_question.setBounds(300,540,400,450);
+        deletepanel.add(id_question, BorderLayout.CENTER);
+
+
+        deleteBut.setBounds(300,0,350,300);
+        deletepanel.add(deleteBut, BorderLayout.CENTER);
+
+        deleteBut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JPanel DELpanel = new JPanel();
+
+                JFrame DELframe = new JFrame();
+                DELframe.setLayout(new BorderLayout());
+                JButton DELBut = new JButton("Удалить");
+                JLabel question = new JLabel("Вы точно уверены?");
+
+                DELframe.setSize(280,350);
+                DELframe.add(DELpanel, BorderLayout.CENTER);
+
+                question.setBounds(300,600,80,25);
+                DELpanel.add(question, BorderLayout.CENTER);
+
+                DELBut.setBounds(300,0,350,300);
+                DELpanel.add(DELBut, BorderLayout.CENTER);
+
+                DELframe.setVisible(true);
+                // Функция для кнопки добавления сотрудника в БД
+                DELBut.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
+                        final String USERNAME = "root";
+                        final String PASSWORD = "root";
+
+                        String id_que = id_question.getText();
+
+                        String QUERY = "DELETE FROM people WHERE id=";
+
+                        QUERY += id_que;
+
+                        Connection conn = null;
+                        try {
+                            conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                            Statement stmt = conn.createStatement();
+                            stmt.executeUpdate(QUERY);
+                            System.out.println("Сотрудник успешно добавлен.");
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    }
+                });
+            }
+        });
+
+        deleteframe.setVisible(true);
+
 
     }
     /**
