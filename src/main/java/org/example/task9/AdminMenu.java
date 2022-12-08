@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,7 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class AdminMenu implements ActionListener {
+class AdminMenu implements ActionListener {
     /*
      * Может добавлять других пользователей
      * и управлять всеми данными сотрудников
@@ -122,12 +123,11 @@ public class AdminMenu implements ActionListener {
         JButton delButton = new JButton();
 
         editorframe.setSize(600,600);
-        editorframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         editorframe.setVisible(true);
         editorframe.add(editorpanel);
 
 
-        updateButton = new JButton("Update something");
+        updateButton = new JButton("Обновить данные");
         updateButton.setBounds(10,300,350,300);
         updateButton.addActionListener(new ActionListener() {
             @Override
@@ -150,6 +150,42 @@ public class AdminMenu implements ActionListener {
         });
 
         editorpanel.add(delButton);
+
+        String QUERY = "SELECT * FROM people";
+        String[] columnNames = {"id", "firstname", "surname", "birthdate", "birthplace", "salary", "status"};
+        ArrayList<String[]> data = new ArrayList<>();
+
+
+        try (
+                Connection conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(QUERY);) {
+            System.out.println("Подключение установлено!");
+            while (rs.next()) {
+                String[] row = {rs.getString("id"),
+                        rs.getString("firstname"),
+                        rs.getString("surname"),
+                        rs.getString("birthdate"),
+                        rs.getString("birthplace"),
+                        rs.getString("salary"),
+                        rs.getString("status")};
+                data.add(row);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Object[][] res = new Object[data.size()][];
+        data.toArray(res);
+
+        JTable table = new JTable(res, columnNames);
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        editorpanel.add(scrollPane);
+        editorpanel.setVisible(true);
+
         return null;
     }
 
@@ -173,7 +209,6 @@ public class AdminMenu implements ActionListener {
         JButton display_Button = new JButton();
 
         adminframe.setSize(600,600);
-        adminframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         adminframe.setVisible(true);
         adminframe.add(adminpanel);
 
@@ -203,7 +238,7 @@ public class AdminMenu implements ActionListener {
 
         adminpanel.add(addButton);
 
-        updateButton = new JButton("Update something");
+        updateButton = new JButton("Обновить данные");
         updateButton.setBounds(10,300,350,300);
         updateButton.addActionListener(new ActionListener() {
             @Override
@@ -216,22 +251,40 @@ public class AdminMenu implements ActionListener {
         adminpanel.add(updateButton);
 
 
-//        JTable tblData = new JTable();
-//        tblData.setBounds(10,300,350,300);
-//        adminpanel.add(tblData);
+        String QUERY = "SELECT * FROM people";
+        String[] columnNames = {"id", "firstname", "surname", "birthdate", "birthplace", "salary", "status"};
+        ArrayList<String[]> data = new ArrayList<>();
 
-        display_Button = new JButton("Display data");
-        display_Button.setBounds(10,300,350,300);
 
-        display_Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Data displayed");
-                display_the_db();
-                display_the_database();
+        try (
+                Connection conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(QUERY);) {
+            System.out.println("Подключение установлено!");
+            while (rs.next()) {
+                String[] row = {rs.getString("id"),
+                        rs.getString("firstname"),
+                        rs.getString("surname"),
+                        rs.getString("birthdate"),
+                        rs.getString("birthplace"),
+                        rs.getString("salary"),
+                        rs.getString("status")};
+                data.add(row);
+
             }
-        });
-        adminpanel.add(display_Button);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Object[][] res = new Object[data.size()][];
+        data.toArray(res);
+
+        JTable table = new JTable(res, columnNames);
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        adminpanel.add(scrollPane);
+        adminframe.setVisible(true);
 
 
         return null;
@@ -254,7 +307,6 @@ public class AdminMenu implements ActionListener {
         JButton sum_of_salary_But = new JButton();
 
         viewerframe.setSize(600,600);
-        viewerframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         viewerframe.setVisible(true);
         viewerframe.add(viewerpanel);
 
@@ -311,8 +363,40 @@ public class AdminMenu implements ActionListener {
 
         viewerpanel.add(sum_of_salary_But);
 
+        String QUERY = "SELECT * FROM people";
+        String[] columnNames = {"id", "firstname", "surname", "birthdate", "birthplace", "salary", "status"};
+        ArrayList<String[]> data = new ArrayList<>();
 
 
+        try (
+                Connection conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(QUERY);) {
+            System.out.println("Подключение установлено!");
+            while (rs.next()) {
+                String[] row = {rs.getString("id"),
+                        rs.getString("firstname"),
+                        rs.getString("surname"),
+                        rs.getString("birthdate"),
+                        rs.getString("birthplace"),
+                        rs.getString("salary"),
+                        rs.getString("status")};
+                data.add(row);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Object[][] res = new Object[data.size()][];
+        data.toArray(res);
+
+        JTable table = new JTable(res, columnNames);
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        viewerpanel.add(scrollPane);
+        viewerpanel.setVisible(true);
 
         return null;
     }
@@ -566,96 +650,6 @@ public class AdminMenu implements ActionListener {
 
         int n = optionPane.showConfirmDialog(null, "Итоговая зарплата составляет:"+ salarySum, null, JOptionPane.CANCEL_OPTION);
 
-    }
-
-    /**
-     * Display the database into window - NOT DONE
-     *
-     * Проблема - не отображается в отдельном окне таблица!
-     *
-     */
-    public static void display_the_db(){
-
-        JFrame frame = new JFrame("Table");
-
-        frame.setSize(600,600);
-
-        JTable tblData = new JTable();
-        tblData.setBounds(30,40,200,300);
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
-            Statement stmt = con.createStatement();
-            String query = "SELECT * from people";
-            ResultSet rs = stmt.executeQuery(query);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            DefaultTableModel model = (DefaultTableModel) tblData.getModel();
-
-            int cols =rsmd.getColumnCount();
-            String[] colName = new String[cols];
-            for(int i=0; i<cols; i++ ){
-                colName[i] = rsmd.getColumnName(i+1);
-//                System.out.println(colName[i]);
-
-            }
-            model.setColumnIdentifiers(colName);
-            String id, firstname, surname, birthdate, birthplace, salary, status;
-            while (rs.next()){
-                id = rs.getString(1);
-                firstname = rs.getString(2);
-                surname = rs.getString(3);
-                birthdate = rs.getString(4);
-                birthplace = rs.getString(5);
-                salary = rs.getString(6);
-                status = rs.getString(7);
-
-                String[] row = {id, firstname, surname, birthdate, birthplace, salary, status};
-//                System.out.println(row);
-                model.addRow(row);
-
-            }
-            stmt.close();
-            con.close();
-
-
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException(e);
-        }
-        frame.setVisible(true);
-
-    }
-
-    public static void display_the_database(){
-        JFrame frame = new JFrame("Test frame");
-
-        String[] columnNames = {
-                "id",
-                "firstname",
-                "surname",
-                "birthdate",
-                "birthplace",
-                "salary",
-                "status"
-        };
-
-        String[][] data = {
-                {"1","John", "Do", "12.02.99", "Canada", "50000.00", "SINGLE"},
-                {"2","Salim", "Salem", "30.08.97", "Morocco", "65000.00", "MARRIED"},
-                {"3","Yuri", "Puturin", "01.01.76", "Russia", "70000.00", "DIVORCED"},
-                {"4","Juan", "De La Cruiz", "25.11.01", "Mexico", "55000.00", "MARRIED"},
-
-        };
-
-        JTable table = new JTable(data, columnNames);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        frame.getContentPane().add(scrollPane);
-        frame.setPreferredSize(new Dimension(450, 200));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
 
     /**
