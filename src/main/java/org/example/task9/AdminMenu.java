@@ -18,13 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 class AdminMenu implements ActionListener {
-    /*
-     * Может добавлять других пользователей
-     * и управлять всеми данными сотрудников
-     */
-
-//    Интерфейс для администратора
-
     static final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
     static final String USERNAME = "root";
     static final String PASSWORD = "root";
@@ -33,6 +26,7 @@ class AdminMenu implements ActionListener {
     private static JLabel passwordlabel;
     private static JPasswordField passwordField;
     private static JButton button;
+    private static JButton regbutton;
 
 
     public static void main(String[] args) {
@@ -41,34 +35,84 @@ class AdminMenu implements ActionListener {
         JFrame frame = new JFrame();
         /* Для форм заполнения логина и пароля */
 
-        frame.setSize(500,200);
+        frame.setSize(500,250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.add(panel);
 
         panel.setLayout(null);
 
-        userlabel = new JLabel("User");
+        userlabel = new JLabel("Логин");
         userlabel.setBounds(10,20,80,25);
         panel.add(userlabel);
 
-        textField = new JTextField(20);
+        textField = new JTextField(30);
         textField.setBounds(100,20,165,25);
         panel.add(textField);
 
-        passwordlabel = new JLabel("Password");
+        passwordlabel = new JLabel("Пароль");
         passwordlabel.setBounds(10,80,80,25);
         panel.add(passwordlabel);
 
-        passwordField = new JPasswordField();
+        passwordField = new JPasswordField(20);
         passwordField.setBounds(100,80,165,25);
         panel.add(passwordField);
 
-        button = new JButton("Log In");
+        button = new JButton("Войти");
         button.setBounds(10,120,80,25);
         button.addActionListener(new AdminMenu());
         panel.add(button);
 
+        regbutton = new JButton("Регистрация");
+        regbutton.setBounds(100,120,150,25);
+        regbutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Registration");
+                JPanel regpanel = new JPanel();
+                JFrame regframe = new JFrame();
+
+                JLabel regLabel = new JLabel("Введите Логин");
+                JLabel regLabel_pass = new JLabel("Введите Логин");
+
+                JTextField log_in = new JTextField();
+                JPasswordField reg_pass = new JPasswordField();
+
+                JButton regbutton_n = new JButton();
+                /* Для форм заполнения логина и пароля */
+
+                regframe.setSize(200,200);
+                regframe.setVisible(true);
+                regframe.add(regpanel);
+
+                regLabel = new JLabel("Введите Логин");
+                regLabel.setBounds(10,20,80,25);
+                regpanel.add(regLabel);
+
+                log_in = new JTextField(20);
+                log_in.setBounds(100,20,165,25);
+                regpanel.add(log_in);
+
+                regLabel_pass = new JLabel("Введите Пароль");
+                regLabel_pass.setBounds(10,80,80,25);
+                regpanel.add(regLabel_pass);
+
+                reg_pass = new JPasswordField(20);
+                reg_pass.setBounds(100,80,165,25);
+                regpanel.add(reg_pass);
+
+                regbutton_n = new JButton("Зарегистрироваться");
+                regbutton_n.setBounds(100,80,165,25);
+                regbutton_n.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        insert_into_login_and_passwords();
+                    }
+                });
+                regpanel.add(regbutton_n);
+            }
+        });
+        panel.add(regbutton);
 
     }
 
@@ -1001,6 +1045,101 @@ class AdminMenu implements ActionListener {
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(QUERY);) {
             System.out.println("Подключение установлено!");
+            while (rs.next()) {
+                System.out.println("=========================== ID: " + rs.getInt("id") + " ==========================");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+    public static void insert_into_login_and_passwords(){
+        System.out.println("Registration");
+        JPanel regpanel = new JPanel();
+        JFrame regframe = new JFrame();
+
+        JLabel regLabel = new JLabel("Введите Логин");
+        JLabel regLabel_pass = new JLabel("Введите Логин");
+
+        JTextField log_in = new JTextField();
+        JPasswordField reg_pass = new JPasswordField();
+
+        JButton regbutton_n = new JButton();
+        /* Для форм заполнения логина и пароля */
+
+        regframe.setSize(200,200);
+        regframe.setVisible(true);
+        regframe.add(regpanel);
+
+        regLabel = new JLabel("Введите Логин");
+        regLabel.setBounds(10,20,80,25);
+        regpanel.add(regLabel);
+
+        log_in = new JTextField(20);
+        log_in.setBounds(100,20,165,25);
+        regpanel.add(log_in);
+
+        regLabel_pass = new JLabel("Введите Пароль");
+        regLabel_pass.setBounds(10,80,80,25);
+        regpanel.add(regLabel_pass);
+
+        reg_pass = new JPasswordField(20);
+        reg_pass.setBounds(100,80,165,25);
+        regpanel.add(reg_pass);
+
+        regbutton_n = new JButton("Зарегистрироваться");
+        regbutton_n.setBounds(100,80,165,25);
+        JTextField finalLog_in = log_in;
+        JPasswordField finalReg_pass = reg_pass;
+        regbutton_n.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
+                final String USERNAME = "root";
+                final String PASSWORD = "root";
+
+                String log_in_in = finalLog_in.getText();
+                String passwrd = finalReg_pass.getText();
+
+
+
+                String QUERY = "INSERT INTO log_pass(log_in, passwrd) VALUES ";
+
+                QUERY += "('" +
+                        log_in_in + "','" +
+                        passwrd
+                        + "')";
+
+                Connection conn = null;
+                try {
+                    conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate(QUERY);
+                    System.out.println("Регистрация прошла успешно!");
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
+
+        regpanel.add(regbutton_n);
+    }
+
+
+
+
+    public static boolean connectToDatabase_login_and_passwords() {
+        String QUERY = "SELECT * FROM log_pass";
+
+        try (
+                Connection conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(QUERY);) {
+            System.out.println("Подключение установлено c базой паролей и логинов!");
             while (rs.next()) {
                 System.out.println("=========================== ID: " + rs.getInt("id") + " ==========================");
             }
